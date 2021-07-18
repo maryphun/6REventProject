@@ -58,3 +58,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+
+Assets/Plugins/RainbowAssets/!Core/Source/RainbowCore.src.unitypackage.meta
+
+Assets/Plugins/RainbowAssets/RainbowFolders/Editor/Source/RainbowFolders.src.unitypackage.meta
