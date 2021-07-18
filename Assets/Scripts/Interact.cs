@@ -3,21 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Interact : MonoBehaviour
 {
+    enum InteractType
+    {
+        Collider,
+        Range,
+        PositionX,
+        Default = Range,
+    }
+
     public PlayerController player;
+    [SerializeField] private InteractType interactType = InteractType.Default;
     [SerializeField] private float interactRange = 1.5f;
     [SerializeField] private float offsetY = 0.8f;
     [SerializeField] private float dialogueOffsetY = 150f;
     [SerializeField] private float floatSpeed = 2.0f;
     [SerializeField] private float floatOffset = 0.1f;
 
+    [SerializeField] UnityEvent OnInteracted;
+
+    DialogueManager dialogueManager;
     SpriteRenderer UI;
     Vector2 originalPosition;
     bool isInRange = false;
     float floatingCount;
+
+    Collider2D interactCollider;
 
     private void Start()
     {
@@ -26,10 +42,24 @@ public class Interact : MonoBehaviour
             player = FindObjectOfType<PlayerController>();
         }
 
+        if (dialogueManager == null)
+        {
+            dialogueManager = FindObjectOfType<DialogueManager>();
+        }
+
         UI = GetComponent<SpriteRenderer>();
 
         originalPosition = GetComponentInParent<Transform>().position; 
         originalPosition = originalPosition + GetComponentInParent<Collider2D>().offset;
+
+        if (interactType == InteractType.Collider)
+        {
+            interactCollider = GetComponent<Collider2D>();
+            if (interactCollider == null)
+            {
+                interactType = InteractType.Default;
+            }
+        }
 
         isInRange = false;
     }
@@ -37,8 +67,7 @@ public class Interact : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float range = Vector2.Distance(player.transform.position, originalPosition);
-        if (range < interactRange)
+        if (IsInRange() && !player.IsInteracting())
         {
             if (!isInRange)
             {
@@ -46,6 +75,8 @@ public class Interact : MonoBehaviour
                 transform.localPosition = new Vector2(0.0f, offsetY);
                 floatingCount = 0.0f;
                 UI.DOFade(1.0f, 0.5f);
+
+                player.InteractRegister(this);
             }
         }
         else
@@ -54,6 +85,8 @@ public class Interact : MonoBehaviour
             {
                 isInRange = false;
                 UI.DOFade(0.0f, 0.5f);
+
+                player.InteractUnregister(this);
             }
         }
 
@@ -62,17 +95,54 @@ public class Interact : MonoBehaviour
         // move
         floatingCount += Time.deltaTime * floatSpeed;
         transform.localPosition = new Vector2(0.0f, offsetY + (Mathf.Sin(floatingCount) * floatOffset));
+    }
 
-        // trigger
-        if (Input.GetKeyDown(KeyCode.Z))
+    public float GetRange(Vector2 compare)
+    {
+        return Vector2.Distance(compare, originalPosition);
+    }
+
+    private bool IsInRange()
+    {
+        bool rtn = false;
+
+        if (interactType == InteractType.Range)
         {
-            Vector2 windowPos = new Vector2(Camera.main.WorldToScreenPoint(originalPosition).x - Screen.width/2f, 
+            rtn = GetRange(player.transform.position) < interactRange;
+        }
+        else if (interactType == InteractType.Collider)
+        {
+            rtn = player.GetComponent<Collider2D>().IsTouching(interactCollider);
+        }
+        else if (interactType == InteractType.PositionX)
+        {
+            rtn = Mathf.Abs(player.transform.position.x - originalPosition.x) < interactRange;
+        }
+
+        return rtn;
+    }
+
+    public void InteractTrigger()
+    {
+        OnInteracted.Invoke();
+
+        Vector2 windowPos = new Vector2(Camera.main.WorldToScreenPoint(originalPosition).x - Screen.width / 2f,
                                             Camera.main.WorldToScreenPoint(originalPosition).y + dialogueOffsetY - Screen.height / 2f);
-            WindowManager.Instance.CreateWindow("dialogue", windowPos, new Vector2(7f * 50f, 100f));
-            WindowManager.Instance.Open("dialogue", 0.5f);
-            WindowManager.Instance.SetText("dialogue", "你好我是箱子。", 0.075f);
-            WindowManager.Instance.SetTextAlignment("dialogue", CustomTextAlignment.center);
-            WindowManager.Instance.SetTextColor("dialogue", Color.yellow);
+
+        dialogueManager.RegisterNewDialogue("啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿。", windowPos);
+
+        List<string> selection = new List<string>();
+        selection.Add("我也是箱子");
+        selection.Add("喔, 然後呢? 關我什麼事?");
+        selection.Add("哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈好好笑喔");
+        dialogueManager.RegisterNewChoice(selection);
+    }
+
+    public void EndInteract()
+    {
+        if (player.IsInteracting())
+        {
+            player.SetInteractMode(false);
         }
     }
 }

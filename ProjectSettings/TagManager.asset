@@ -41,8 +41,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackObject
+    uniqueID: 2305931983
+    locked: 0
   - name: Object
     uniqueID: 510118243
+    locked: 0
+  - name: FrontObject
+    uniqueID: 3553342741
+    locked: 0
+  - name: Shadow
+    uniqueID: 3315184815
     locked: 0
   - name: UI
     uniqueID: 2620202243

@@ -185,6 +185,12 @@ public class Window : MonoBehaviour
         dialogText.color = color;
     }
 
+    public void SetTextMargin(Vector4 vec)
+    {
+        Debug.Log(vec);
+        dialogText.margin = vec;
+    }
+
     public void SetText(string newText)
     {
         dialogText.SetText(newText);
@@ -294,7 +300,7 @@ public class Window : MonoBehaviour
             {
                 if (typewriteCnt % 2 == 0)
                 {
-                    AudioManager.Instance.PlaySFX("Typewrite 1", 0.02f);
+                    AudioManager.Instance.PlaySFX("Letter_1" , 0.1f);
                 }
                 typewriteCnt++;
             }
@@ -469,6 +475,8 @@ public class Window : MonoBehaviour
 
         tmp.color = Color.white;
         tmp.sprite = Resources.Load<Sprite>(path);
+
+        if (behindWindow) tmp.transform.SetSiblingIndex(0);
 
         tmp.gameObject.SetActive(windowState == WindowState.opened);
     }

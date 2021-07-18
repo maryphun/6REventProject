@@ -140,6 +140,14 @@ public class WindowManager : Singleton<WindowManager>
             comp.SetTextSize(size);
         }
     }
+    public void SetTextMargin(string name, Vector4 vec)
+    {
+        Window comp;
+        if (GetReference(name, out comp))
+        {
+            comp.SetTextMargin(vec);
+        }
+    }
 
     public void SetTextColor(string name, Color color)
     {
