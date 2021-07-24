@@ -41,6 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BackObjectOtherRoom
+    uniqueID: 2946299179
+    locked: 0
+  - name: ObjectOtherRoom
+    uniqueID: 3389826345
+    locked: 0
+  - name: FrontObjectOtherRoom
+    uniqueID: 4153392997
+    locked: 0
+  - name: ShadowOtherRoom
+    uniqueID: 2794368265
+    locked: 0
   - name: BackObject
     uniqueID: 2305931983
     locked: 0

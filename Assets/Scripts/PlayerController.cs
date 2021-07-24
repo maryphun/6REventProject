@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -44,15 +45,25 @@ public class PlayerController : MonoBehaviour
         Move(newPos, movInput);
 
         // flip
-        if (graphic.IsFlipX() && movInput.x > 0.0f)
+        if (movInput.x > 0.0f)
         {
-            graphic.FlipX(false);
+            graphic.ChangeFacing(CharacterFacing.Right);
             mainCamera.SetCameraOffsetX(cameraOffset.x + 0.5f);
         }
-        else if(!graphic.IsFlipX() && movInput.x < 0.0f)
+        else if(movInput.x < 0.0f)
         {
-            graphic.FlipX(true);
+            graphic.ChangeFacing(CharacterFacing.Left);
             mainCamera.SetCameraOffsetX(cameraOffset.x + -0.5f);
+        }
+        else if (movInput.y < 0.0f)
+        {
+            graphic.ChangeFacing(CharacterFacing.Bottom);
+            mainCamera.SetCameraOffsetX(cameraOffset.x);
+        }
+        else if (movInput.y > 0.0f)
+        {
+            graphic.ChangeFacing(CharacterFacing.Top);
+            mainCamera.SetCameraOffsetX(cameraOffset.x);
         }
 
         // camera
@@ -146,5 +157,48 @@ public class PlayerController : MonoBehaviour
     public void SetInteractMode(bool boolean)
     {
         interactMode = boolean;
+    }
+
+    public void Teleport(float x, float y, float time)
+    {
+        Vector2 target;
+        if (x == 0)
+        {
+            target.x = transform.position.x;
+        }
+        else
+        {
+            target.x = x;
+        }
+        if (y == 0)
+        {
+            target.y = transform.position.y;
+        }
+        else
+        {
+            target.y = y;
+
+            cameraOffset.y += target.y - transform.position.y;
+        }
+
+        transform.DOMove(target, time);
+    }
+
+    public void ChangeFaceDirection(CharacterFacing direction)
+    {
+        Debug.Log(direction);
+        graphic.ChangeFacing(direction);
+    }
+
+    public void EndInteractWithDelay(float time)
+    {
+        StartCoroutine(EndInteract(time));
+    }
+
+    private IEnumerator EndInteract(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        SetInteractMode(false);
     }
 }

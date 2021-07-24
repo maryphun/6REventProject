@@ -21,6 +21,7 @@ public class Interact : MonoBehaviour
     [SerializeField] private InteractType interactType = InteractType.Default;
     [SerializeField] private float interactRange = 1.5f;
     [SerializeField] private float offsetY = 0.8f;
+    [SerializeField] private float offsetX = 0.0f;
     [SerializeField] private float dialogueOffsetY = 150f;
     [SerializeField] private float floatSpeed = 2.0f;
     [SerializeField] private float floatOffset = 0.1f;
@@ -94,7 +95,7 @@ public class Interact : MonoBehaviour
 
         // move
         floatingCount += Time.deltaTime * floatSpeed;
-        transform.localPosition = new Vector2(0.0f, offsetY + (Mathf.Sin(floatingCount) * floatOffset));
+        transform.localPosition = new Vector2(0.0f + offsetX, offsetY + (Mathf.Sin(floatingCount) * floatOffset));
     }
 
     public float GetRange(Vector2 compare)
@@ -126,16 +127,16 @@ public class Interact : MonoBehaviour
     {
         OnInteracted.Invoke();
 
-        Vector2 windowPos = new Vector2(Camera.main.WorldToScreenPoint(originalPosition).x - Screen.width / 2f,
-                                            Camera.main.WorldToScreenPoint(originalPosition).y + dialogueOffsetY - Screen.height / 2f);
+        //Vector2 windowPos = new Vector2(Camera.main.WorldToScreenPoint(originalPosition).x - Screen.width / 2f,
+        //                                    Camera.main.WorldToScreenPoint(originalPosition).y + dialogueOffsetY - Screen.height / 2f);
 
-        dialogueManager.RegisterNewDialogue("啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿。", windowPos);
+        //dialogueManager.RegisterNewDialogue("啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊阿。", windowPos);
 
-        List<string> selection = new List<string>();
-        selection.Add("我也是箱子");
-        selection.Add("喔, 然後呢? 關我什麼事?");
-        selection.Add("哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈好好笑喔");
-        dialogueManager.RegisterNewChoice(selection);
+        //List<string> selection = new List<string>();
+        //selection.Add("我也是箱子");
+        //selection.Add("喔, 然後呢? 關我什麼事?");
+        //selection.Add("哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈好好笑喔");
+        //dialogueManager.RegisterNewChoice(selection);
     }
 
     public void EndInteract()

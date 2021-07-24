@@ -7,9 +7,11 @@ using DG.Tweening;
 public class ObjectGraphic : MonoBehaviour
 {
     [SerializeField] bool transparentForPlayer = false;
+    [SerializeField] bool fadeWhenActivate = false;
 
     SpriteRenderer renderer;
     Vector2 originalPosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,5 +33,21 @@ public class ObjectGraphic : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         Debug.Log("exit");
+    }
+
+    public void Activate(bool boolean)
+    {
+        if (fadeWhenActivate)
+        {
+            if (boolean)
+            {
+                renderer.DOFade(0.0f, 0.0f);
+                renderer.DOFade(1.0f, 0.5f);
+            }
+            else
+            {
+                renderer.DOFade(0.0f, 0.5f);
+            }
+        }
     }
 }
