@@ -186,7 +186,6 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeFaceDirection(CharacterFacing direction)
     {
-        Debug.Log(direction);
         graphic.ChangeFacing(direction);
     }
 
